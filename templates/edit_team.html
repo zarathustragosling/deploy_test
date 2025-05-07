@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Настройки команды{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-10 space-y-8">
+  <h1 class="text-3xl font-bold text-white">🛠 Настройки команды</h1>
+
+
+  <form method="POST" class="bg-slate-800 p-6 rounded-xl space-y-4" enctype="multipart/form-data">
+    <div>
+      <label for="name" class="text-white text-sm block mb-1">Название команды</label>
+      <input type="text" id="name" name="name" required value="{{ team.name }}"
+             class="w-full p-3 bg-gray-900 text-white rounded border border-gray-700">
+    </div>
+
+    <div>
+      <label for="avatar_url" class="text-white text-sm block mb-1">URL аватара</label>
+      <input type="url" id="avatar_url" name="avatar_url" value="{{ team.avatar_url }}"
+             class="w-full p-3 bg-gray-900 text-white rounded border border-gray-700">
+    </div>
+
+    <div>
+      <label for="description" class="text-white text-sm block mb-1">Описание</label>
+      <textarea id="description" name="description" rows="3"
+                class="w-full p-3 bg-gray-900 text-white rounded border border-gray-700">{{ team.description }}</textarea>
+    </div>
+
+    <button type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium text-sm transition">
+      💾 Сохранить изменения
+    </button>
+  </form>
+
+
+  <!-- Блок пригласительного кода -->
+  <div class="bg-slate-800 p-6 rounded-xl space-y-4 border border-slate-700">
+    <h2 class="text-xl font-semibold text-white">📨 Пригласительный код</h2>
+    <div class="flex items-center gap-3">
+      <input type="text" id="invite-code" value="{{ team.invite_code }}"
+             class="bg-gray-900 text-white px-4 py-2 rounded border border-gray-700 w-full" readonly>
+      <button onclick="copyCode()" class="btn btn-sm">📋 Копировать</button>
+    
+      <form method="POST" action="{{ url_for('team.refresh_invite_code') }}">
+        <button type="submit" class="btn btn-sm bg-yellow-500 hover:bg-yellow-600 text-black">♻️ Новый код</button>
+      </form>
+      
+    </div>
+    <p class="text-sm text-slate-400">Код можно отправить другим участникам, чтобы они могли присоединиться к команде.</p>
+  </div>
+</div>
+
+<script>
+  function copyCode() {
+    const input = document.getElementById("invite-code");
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(input.value);
+  }
+</script>
+{% endblock %}
